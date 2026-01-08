@@ -75,7 +75,7 @@ header {
   justify-content: center;
   padding: 4rem 2rem;
   min-height: 100vh;
-  background-image: url('carhub2.webp'); /* Replace with your actual image */
+  background-image: url('images/carhub2.webp'); /* Replace with your actual image */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -422,11 +422,11 @@ button:hover {
 }
 
 .login-image {
-  background-image: url('login2.jpeg');
+  background-image: url('images/login2.jpeg');
 }
 
 .register-image {
-  background-image: url('car-register2.jpg');
+  background-image: url('images/car-register2.jpg');
 }
 
 .auth-form {
