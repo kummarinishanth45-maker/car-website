@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register - CarHub</title>
+  <link rel="stylesheet" href="stylecar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="auth-page">
+    <!-- Left side car image -->
+    <div class="auth-image register-image"></div>
+
+    <!-- Right side form -->
+    <div class="auth-form">
+      <form id="registerForm">
+        <h2>Create an Account</h2>
+        <input type="text" id="fullName" placeholder="Full Name" required />
+        <input type="email" id="regEmail" placeholder="Email" required />
+        <input type="password" id="regPassword" placeholder="Password" required />
+        <button type="submit">Register</button>
+        <p>Already have an account? <a href="index.html">Login here</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const fullName = document.getElementById('fullName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+
+      fetch('http://localhost:5000/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName, email, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.message === "User registered successfully") {
+          window.location.href = 'index.html';
+        }
+      })
+      .catch(err => console.error(err));
+    });
+  </script>
+</body>
+</html>

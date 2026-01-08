@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CarHub - Your Dream Car Awaits</title>
+  <link rel="stylesheet" href="stylecar.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">
+      <img src="carhub.jpg" alt="CarHub Logo"/>
+    </a>
+    <ul class="navbar">
+      <li><a href="home.html">Home</a></li>
+      <li><a href="models.html">Car Models</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </header>
+
+  <section class="home" id="home">
+    <div class="text">
+      <h1><span>Drive</span> your dream car today</h1>
+      <p>Discover the best car models with top-notch technology, luxurious designs, and unparalleled performance.</p>
+      <button onclick="toggleTestDrive()">Book a Test Drive</button>
+    </div>
+
+    <div class="form-container" id="testDriveForm" style="display:none;">
+      <h2>Book a Test Drive</h2>
+      <form onsubmit="handleTestDrive(event)">
+        <select name="CarModel" required>
+          <option value="" disabled selected>Select Model</option>
+          <option value="Sedan">Sedan</option>
+          <option value="SUV">SUV</option>
+          <option value="SportsCar">Sports Car</option>
+          <option value="Electric">Electric Car</option>
+        </select>
+        <input type="number" name="quantity" placeholder="Quantity" required min="1"/>
+        <input type="text" name="name" placeholder="Your Name" required/>
+        <input type="email" name="email" placeholder="Your Email" required/>
+        <input type="tel" name="phone" placeholder="Your Phone"/>
+        <label for="license">License</label>
+        <input type="file" name="license" id="license" required/>
+        <label for="aadhar">Aadhar Card</label>
+        <input type="file" name="aadhar" id="aadhar" required/>
+        <label for="photo">Photo</label>
+        <input type="file" name="photo" id="photo" required/>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </section>
+
+  <script>
+function toggleTestDrive() {
+  document.getElementById('testDriveForm').style.display = 'block';
+}
+
+function handleTestDrive(e) {
+  e.preventDefault();
+
+  // Show loader
+  document.getElementById("loader").style.display = "block";
+
+  const formData = new FormData(e.target);
+
+  fetch('http://localhost:5000/book-test-drive', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    // Hide loader
+    document.getElementById("loader").style.display = "none";
+
+    // Show success
+    alert(data.message);
+    e.target.reset();
+    document.getElementById('testDriveForm').style.display = 'none';
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("loader").style.display = "none";
+    alert("Error booking test drive");
+  });
+}
+</script>
+
+  <div id="loader" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;">
+  <img src="spin.gif" width="60" />
+</div>
+
+</body>
+</html>
