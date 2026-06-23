@@ -1,39 +1,62 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const db = require('../db');
+const express = require("express");
 const router = express.Router();
+const db = require("../db");
 
-// REGISTER
-router.post('/register', async (req, res) => {
-    const { name, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+router.post("/register", (req, res) => {
+    const { username, email, password } = req.body;
+
+    const sql =
+        "INSERT INTO users(full_name,email,password) VALUES(?,?,?)";
 
     db.query(
-        'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
-        [name, email, hashedPassword],
-        (err) => {
+        sql,
+        [username, email, password],
+        (err, result) => {
+
             if (err) {
-                console.error(err);
-                return res.status(500).json({ error: 'Database error' });
+                console.log(err);
+
+                return res.status(500).json({
+                    message: err.message
+                });
             }
-            res.json({ message: 'User registered successfully' });
+
+            res.json({
+                message: "Registration Successful"
+            });
         }
     );
 });
 
-// LOGIN
-router.post('/login', (req, res) => {
+router.post("/login", (req, res) => {
+
     const { email, password } = req.body;
 
-    db.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
-        if (err) return res.status(500).json({ error: 'Database error' });
-        if (results.length === 0) return res.status(401).json({ error: 'Invalid email or password' });
+    const sql =
+        "SELECT * FROM users WHERE email=? AND password=?";
 
-        const isMatch = await bcrypt.compare(password, results[0].password);
-        if (!isMatch) return res.status(401).json({ error: 'Invalid email or password' });
+    db.query(sql,
+        [email, password],
+        (err, result) => {
 
-        res.json({ message: 'Login successful' });
-    });
+            if (err) {
+                return res.status(500).json({
+                    message: "Server Error"
+                });
+            }
+
+            if (result.length > 0) {
+                res.json({
+                    success: true,
+                    message: "Login Successful"
+                });
+            } else {
+                res.json({
+                    success: false,
+                    message: "Invalid Credentials"
+                });
+            }
+        });
 });
 
 module.exports = router;

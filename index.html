@@ -20,26 +20,47 @@
   </div>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+document.getElementById("loginForm")
+.addEventListener("submit", async (e) => {
 
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
+    e.preventDefault();
 
-      fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      })
-      .then(res => res.json())
-      .then(data => {
-        alert(data.message);
-        if (data.message === "Login successful") {
-          window.location.href = 'home.html';
+    const email =
+        document.getElementById("loginEmail").value;
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    try {
+
+        const response = await fetch(
+            "http://localhost:5000/api/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert("Login Successful");
+            window.location.href = "home.html";
+        } else {
+            alert(data.message);
         }
-      })
-      .catch(err => console.error(err));
-    });
-  </script>
+
+    } catch (error) {
+        console.log(error);
+        alert("Server Not Running");
+    }
+});
+</script>
 </body>
 </html>
